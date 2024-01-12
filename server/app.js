@@ -1,6 +1,7 @@
 // content to MongoDB
-require('dotenv').config()
-const mongoose = require('mongoose')
+import dotenv from 'dotenv'
+dotenv.config()
+import mongoose from 'mongoose';
 
 main().catch(err => {
     console.log(err);
@@ -11,7 +12,17 @@ async function main() {
 }
 
 // server staring 
-const express = require('express')
+import express from 'express';
+import userRouter from './routes/user.js'
+import authAdminRouter from './routes/auth.js'
+import { projectRouter } from './routes/editRouter.js'
+import User from './modals/User.js';
+
+const adminUser =  new User({
+    username: 'admin',
+    password: '123'
+})
+
 const app = express()
 const port =  3000
 
@@ -20,6 +31,17 @@ app.listen(port, () => {
     console.log(`you have been listened at port: ${port}`);
 })
 
-app.get('/', (req, res) => {
-    res.send('hello world')
+app.use('/api', userRouter)
+app.use('/api', authAdminRouter, projectRouter)
+
+
+app.use((err, req, res, next) => {
+const statusCode = err.status || 500
+const message = err.message || 'internal error!'
+
+return res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message
+})
 })

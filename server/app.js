@@ -15,8 +15,9 @@ async function main() {
 import express from 'express';
 import userRouter from './routes/user.js'
 import authAdminRouter from './routes/auth.js'
-import { projectRouter } from './routes/editRouter.js'
+import { noteRouter, projectRouter } from './routes/editRouter.js'
 import User from './modals/User.js';
+import cookieParser from 'cookie-parser';
 
 const adminUser =  new User({
     username: 'admin',
@@ -26,22 +27,24 @@ const adminUser =  new User({
 const app = express()
 const port =  3000
 
+app.use(cookieParser())
+
 app.use(express.json())
 app.listen(port, () => {
     console.log(`you have been listened at port: ${port}`);
 })
 
 app.use('/api', userRouter)
-app.use('/api', authAdminRouter, projectRouter)
+app.use('/api', authAdminRouter, projectRouter, noteRouter)
 
 
 app.use((err, req, res, next) => {
-const statusCode = err.status || 500
+const status = err.status || 500
 const message = err.message || 'internal error!'
 
-return res.status(statusCode).json({
+return res.status(status).json({
     success: false,
-    statusCode,
+    status,
     message
 })
 })

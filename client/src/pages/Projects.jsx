@@ -3,7 +3,7 @@ import { SingleProject } from '../components/projects/SingleProject'
 
 export const Projects = () => {
   return (
-    <div>Projects
+    <div className='pb-36'>
         <SingleProject />
     </div>
   )

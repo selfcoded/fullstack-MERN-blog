@@ -11,7 +11,9 @@ import './index.css'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <RouterProvider router={router} />
+      <React.StrictMode>
+        <RouterProvider router={router} />
+      </React.StrictMode>
     </PersistGate>
   </Provider>
 )

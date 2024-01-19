@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginFailure, loginStart, loginSuccess } from '../redux/admin/adminSlice'
+import { reInitial,loginFailure, loginStart, loginSuccess, checkAdmin } from '../redux/admin/adminSlice'
 
 export const Login = () => {
-    const { loading, error } = useSelector((state) => state.user)
+    const { loading, error, currentUser } = useSelector((state) => state.user)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({})
-
     const handleChange = (e) => {
+        dispatch(reInitial())
         setFormData({
             ...formData,
             [e.target.id]: e.target.value
@@ -34,12 +34,16 @@ export const Login = () => {
                 return;
             }
             dispatch(loginSuccess(data))
-            navigate('/');
+            dispatch(checkAdmin(data.admin))
+            navigate('/edit/project');
             
         } catch(error) {
             dispatch(loginFailure(error.message))
         }
     }
+    // useEffect(() => {
+    //     if (currentUser !== null) navigate('/')
+    // },[])
   return (
     <>
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -79,7 +83,7 @@ export const Login = () => {
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                     </div>
                 </div>
-                    <p>{error.message ? error.message : ''}</p>
+                    {error && <p className='text-red-500 mt-5'>{error}</p>} 
                 <div>
                     <button 
                         type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{loading ? 'Loading...' : 'Sign in'}</button>

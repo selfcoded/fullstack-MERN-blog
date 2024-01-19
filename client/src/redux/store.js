@@ -3,7 +3,7 @@ import { userReducer } from './admin/adminSlice'
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-const rootReducers = combineReducers({ user: userReducer })
+const rootReducers = combineReducers({ user: userReducer, })
 
 const persistConfig = {
     key: 'root',
@@ -14,7 +14,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducers)
 
 export const store = configureStore({
-    reducer: persistedReducer,
+    reducer: persistedReducer, 
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
